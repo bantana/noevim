@@ -41,7 +41,12 @@ Plug 'fatih/vim-go'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'posva/vim-vue'
 Plug 'easymotion/vim-easymotion'
-Plug 'prettier/vim-prettier'
+" post install (yarn install | npm install) then load plugin only for editing supported files
+Plug 'prettier/vim-prettier',{
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'vue', 'yaml', 'html'] }
+Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
+
 Plug 'Valloric/YouCompleteMe'
 
 Plug 'wannesm/wmgraphviz.vim'
@@ -176,6 +181,7 @@ let g:ale_fixers = {'javascript': ['prettier_standard']}
 let g:ale_linters = {'javascript': ['']}
 let g:ale_fix_on_save = 1
 let g:ale_javascript_prettier_standard_use_global=1
+let g:ale_fixers = {'css': ['prettier']}
 
 " max line length that prettier will wrap on
 " Prettier default: 80
@@ -191,7 +197,7 @@ let g:prettier#config#use_tabs = 'false'
 
 " print semicolons
 " Prettier default: true
-let g:prettier#config#semi = 'false'
+let g:prettier#config#semi = 'true'
 
 " single quotes over double quotes
 " Prettier default: false
@@ -224,7 +230,9 @@ let g:prettier#config#config_precedence = 'prefer-file'
 let g:prettier#config#prose_wrap = 'preserve'
 
 let g:prettier#autoformat = 0
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue PrettierAsync
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html Prettier
+
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 " }}}
 " youcompleteme ultisnips {{{
 " make ycm compatible with ultisnips (using supertab)
@@ -307,6 +315,7 @@ let g:lsc_preview_split_direction = 'above'
   let g:go_highlight_structs = 1
   let g:go_highlight_build_constraints = 1
   let g:go_snippet_engine = "ultisnips"
+  let g:go_gocode_propose_source=0
 
   let g:go_metalinter_autosave = 1
   "let g:go_metalinter_autosave_enabled = ['vet', 'golint']
@@ -354,4 +363,7 @@ let g:ack_use_dispatch = 1
 " }}}
 " graphviz {{{
 let g:WMGraphviz_output="png"
+" }}}
+" gitgutter {{{
+let g:gitgutter_max_signs = 2500
 " }}}

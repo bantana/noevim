@@ -1,2 +1,7 @@
-plugged
+.cache
+repos
+cache_nvim
+state_nvim.vim
+.idea
 .netrwhist
+plugged

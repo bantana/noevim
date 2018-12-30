@@ -1,4 +1,4 @@
-" Install Vim Plug if not installed
+"aInstall Vim Plug if not installed
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -22,10 +22,8 @@ endfunction
 call plug#begin('~/.config/nvim/plugged')
 Plug 'tpope/vim-unimpaired'
 Plug 'w0rp/ale'
-Plug 'junegunn/fzf',{'dir': '~/.fzf', 'do': './install --all'}
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
-" Plug ('radenling/vim-dispatch-neovim')
 Plug 'scrooloose/nerdtree'
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -45,6 +43,10 @@ Plug 'easymotion/vim-easymotion'
 Plug 'prettier/vim-prettier',{
   \ 'do': 'yarn install',
   \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'vue', 'yaml', 'html'] }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh', }
+Plug 'junegunn/fzf',{'dir': '~/.fzf', 'do': './install --all'}
 Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 Plug 'Valloric/YouCompleteMe'
@@ -179,9 +181,12 @@ let g:quickrun_config = {
 let g:ale_sign_column_always=1
 let g:ale_fixers = {'javascript': ['prettier_standard']}
 let g:ale_linters = {'javascript': ['']}
+" let g:ale_fixers = {'typescript': ['prettier_standard']}
+" let g:ale_linters = {'typescript': ['']}
 let g:ale_fix_on_save = 1
 let g:ale_javascript_prettier_standard_use_global=1
 let g:ale_fixers = {'css': ['prettier']}
+
 
 " max line length that prettier will wrap on
 " Prettier default: 80
@@ -197,7 +202,7 @@ let g:prettier#config#use_tabs = 'false'
 
 " print semicolons
 " Prettier default: true
-let g:prettier#config#semi = 'true'
+let g:prettier#config#semi = 'false'
 
 " single quotes over double quotes
 " Prettier default: false
@@ -229,10 +234,12 @@ let g:prettier#config#config_precedence = 'prefer-file'
 " always|never|preserve
 let g:prettier#config#prose_wrap = 'preserve'
 
-let g:prettier#autoformat = 0
+" let g:prettier#autoformat = 0
+let g:prettier#autoformat = 1
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html Prettier
 " autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html Prettier
 
-command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+" command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 " }}}
 " youcompleteme ultisnips {{{
 " make ycm compatible with ultisnips (using supertab)
@@ -263,15 +270,6 @@ let dart_format_on_save = 1
 map <leader>f :Ranger<CR>
 let g:NERDTreeHijackNetrw = 0 "// add this line if you use NERDTree
 let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
-" }}}
-" ale always {{{
-let g:ale_sign_column_always=1
-let g:ale_fixers = {'javascript': ['prettier_standard']}
-let g:ale_fixers = {'typescript': ['prettier_standard']}
-let g:ale_linters = {'javascript': ['']}
-let g:ale_linters = {'typescript': ['']}
-let g:ale_fix_on_save = 1
-let g:ale_javascript_prettier_standard_use_global=1
 " }}}
 " dart {{{
 let g:lsc_server_commands = {'dart': 'dart_language_server'}
@@ -331,25 +329,26 @@ let g:lsc_preview_split_direction = 'above'
   let g:syntastic_go_checkers = ['gometalinter']
   let g:syntastic_mode_map = { 'mode': 'active', 'passive_filetypes': ['go'] }
   let g:go_list_type = "quickfix"
-  nnoremap <leader>m :TagbarToggle<CR>
 " }}}.
 " Error and warning signs. {{{
-" let g:ale_sign_error = '⤫'
-" let g:ale_sign_warning = '⚠'
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
 " }}}
 " rust {{{
 let g:LanguageClient_autoStart = 0
 nnoremap <leader>lcs :LanguageClientStart<CR>
 " if you want it to turn on automatically
-" let g:LanguageClient_autoStart = 1
-
-" let g:LanguageClient_serverCommands = {
-"     \ 'python': ['pyls'],
-"     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-"     \ 'javascript': ['javascript-typescript-stdio'],
-"     \ 'go': ['go-langserver'] }
+let g:LanguageClient_autoStart = 1
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'] }
+    \ 'python': ['pyls'],
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ 'javascript': ['javascript-typescript-stdio'],
+    \ 'vue': ['vls'],
+    \ 'go': ['go-langserver'] }
+" Or map each action separately
+au FileType javascript nmap <silent> K :call LanguageClient#textDocument_hover()<CR>
+au FileType javascript nmap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+au FileType javascript nmap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
 let g:racer_experimental_completer = 1
 au FileType rust nmap gd <Plug>(rust-def)

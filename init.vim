@@ -177,16 +177,45 @@ let g:quickrun_config = {
 \    },
 \}
 " }}}
+" youcompleteme ultisnips {{{
+" make ycm compatible with ultisnips (using supertab)
+let g:ycm_key_list_select_completion = ['<c-n>', '<down>']
+let g:ycm_key_list_previous_completion = ['<c-j>', '<up>']
+let g:supertabdefaultcompletiontype = '<c-n>'
+
+" better key bindings for ultisnipsexpandtrigger
+let g:ultisnipsexpandtrigger = "<tab>"
+let g:ultisnipsjumpforwardtrigger = "<tab>"
+let g:ultisnipsjumpbackwardtrigger = "<s-tab>"
+" }}}
+" vim-mundo ------- {{{
+set undofile
+" check 'vim-mundo directory'
+call EnsureDirExits($HOME . '/.vim/tmp/undo')
+set undodir=~/.vim/tmp/undo
+nnoremap <leader>u :MundoToggle<cr>
+let g:mundo_debug = 1
+let g:mundo_preview_bottom = 1
+let g:mundo_tree_statusline = "mundo"
+let g:mundo_preview_statusline = "mundo preview"
+" }}}
+" Dart-vim-plugin {{{
+let dart_format_on_save = 1
+" }}}
+" range {{{
+map <leader>f :Ranger<CR>
+let g:NERDTreeHijackNetrw = 0 "// add this line if you use NERDTree
+let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
+" }}}
 " ale always {{{
 let g:ale_sign_column_always=1
 let g:ale_fixers = {'javascript': ['prettier_standard']}
+let g:ale_fixers = {'typescript': ['prettier_standard']}
+let g:ale_fixers = {'css': ['prettier']}
 let g:ale_linters = {'javascript': ['']}
-" let g:ale_fixers = {'typescript': ['prettier_standard']}
-" let g:ale_linters = {'typescript': ['']}
+let g:ale_linters = {'typescript': ['']}
 let g:ale_fix_on_save = 1
 let g:ale_javascript_prettier_standard_use_global=1
-let g:ale_fixers = {'css': ['prettier']}
-
 
 " max line length that prettier will wrap on
 " Prettier default: 80
@@ -239,37 +268,9 @@ let g:prettier#autoformat = 1
 autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html Prettier
 " autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html Prettier
 
-" command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 " }}}
-" youcompleteme ultisnips {{{
-" make ycm compatible with ultisnips (using supertab)
-let g:ycm_key_list_select_completion = ['<c-n>', '<down>']
-let g:ycm_key_list_previous_completion = ['<c-j>', '<up>']
-let g:supertabdefaultcompletiontype = '<c-n>'
-
-" better key bindings for ultisnipsexpandtrigger
-let g:ultisnipsexpandtrigger = "<tab>"
-let g:ultisnipsjumpforwardtrigger = "<tab>"
-let g:ultisnipsjumpbackwardtrigger = "<s-tab>"
-" }}}
-" vim-mundo ------- {{{
-set undofile
-" check 'vim-mundo directory'
-call EnsureDirExits($HOME . '/.vim/tmp/undo')
-set undodir=~/.vim/tmp/undo
-nnoremap <leader>u :MundoToggle<cr>
-let g:mundo_debug = 1
-let g:mundo_preview_bottom = 1
-let g:mundo_tree_statusline = "mundo"
-let g:mundo_preview_statusline = "mundo preview"
-" }}}
-" Dart-vim-plugin {{{
-let dart_format_on_save = 1
-" }}}
-" range {{{
-map <leader>f :Ranger<CR>
-let g:NERDTreeHijackNetrw = 0 "// add this line if you use NERDTree
-let g:ranger_replace_netrw = 1 "// open ranger when vim open a directory
+" ale always {{{
 " }}}
 " dart {{{
 let g:lsc_server_commands = {'dart': 'dart_language_server'}
